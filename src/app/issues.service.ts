@@ -8,7 +8,7 @@ import { issues } from '../assets/mock-issues';
 })
 export class IssuesService {
 
-  private issues: Issue[] = [];
+  private issues: Issue[] = issues;
 
   constructor() { }
 
@@ -28,5 +28,13 @@ export class IssuesService {
     };
     const index = this.issues.findIndex(i => i === issue);
     this.issues[index] = selectedIssue;
+  }
+
+  getSuggestions(title: string): Issue[] {
+    if (title.length > 3) {
+      return this.issues.filter(issue =>
+        issue.title.indexOf(title) !== -1);
+    }
+    return [];
   }
 }

@@ -8,7 +8,7 @@ import { issues } from '../assets/mock-issues';
 })
 export class IssuesService {
 
-  private issues: Issue[] = issues;
+  private issues: Issue[] = [];
 
   constructor() { }
 

@@ -10,6 +10,11 @@ import { IssueReportComponent } from './issue-report/issue-report.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { IssueDetailComponent } from './issue-detail/issue-detail.component';
 
+// Firebase
+import { environment } from 'src/environments/environment';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,7 +27,9 @@ import { IssueDetailComponent } from './issue-detail/issue-detail.component';
     BrowserModule,
     ClarityModule,
     BrowserAnimationsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule
   ],
   providers: [],
   bootstrap: [AppComponent]

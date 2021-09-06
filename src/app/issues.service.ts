@@ -1,33 +1,42 @@
 import { Injectable } from '@angular/core';
 import { Issue } from './issue';
-import { issues } from '../assets/mock-issues';
+// import { issues } from '../assets/mock-issues';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 
+
+const getObservable = (collection: AngularFirestoreCollection<Issue>) => {
+  const subject = new BehaviorSubject<Issue[]>([]);
+  collection.valueChanges({ idField: 'id' }).subscribe((val: Issue[]) => {
+    subject.next(val);
+  });
+  return subject;
+};
 
 @Injectable({
   providedIn: 'root'
 })
 export class IssuesService {
 
-  private issues: Issue[] = issues;
+  issues: Issue[] = [];
 
-  constructor() { }
+  constructor(private store: AngularFirestore) {
+    this.getPendingIssues()
+      .subscribe(res => this.issues = res)
+  }
 
-  getPendingIssues(): Issue[] {
-    return this.issues.filter(issue => !issue.completed);
+  getPendingIssues() {
+    return getObservable(this.store.collection('issues')) as Observable<Issue[]>;
   }
 
   createIssue(issue: Issue) {
     issue.issueNo = this.issues.length + 1;
-    this.issues.push(issue);
+    this.store.collection('issues').add(issue);
   }
 
   completeIssue(issue: Issue) {
-    const selectedIssue: Issue = {
-      ...issue,
-      completed: new Date()
-    };
-    const index = this.issues.findIndex(i => i === issue);
-    this.issues[index] = selectedIssue;
+    issue.completed = new Date();
+    this.store.collection('issues').doc(issue.id).update(issue);
   }
 
   getSuggestions(title: string): Issue[] {
@@ -38,14 +47,7 @@ export class IssuesService {
     return [];
   }
 
-  updateIssue(issueNo: number, issue: Issue) {
-    const existingIssue = this.issues.find(i => i.issueNo === issueNo);
-    if (existingIssue) {
-      const index = this.issues.indexOf(existingIssue);
-      this.issues[index] = {
-        ...existingIssue,
-        ...issue
-      };
-    }
+  updateIssue(issue: Issue) {
+    this.store.collection('issues').doc(issue.id).update(issue);
   }
 }

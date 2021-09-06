@@ -18,6 +18,7 @@ export class IssueDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.issueForm = this.builder.group({
+      id: [this.issue?.id],
       title: [this.issue?.title, Validators.required],
       description: [this.issue?.description],
       priority: [this.issue?.priority, Validators.required]
@@ -26,7 +27,7 @@ export class IssueDetailComponent implements OnInit {
 
   save() {
     if (this.issue) {
-      this.issueService.updateIssue(this.issue.issueNo, this.issueForm?.value);
+      this.issueService.updateIssue(this.issueForm?.value);
       this.formClose.emit();
     }
   }

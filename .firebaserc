@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "issue-tracker-9c4ae": {
+      "hosting": {
+        "issue-tracker": [
+          "issue-tracker-9c4ae"
+        ]
+      }
+    }
+  }
+}

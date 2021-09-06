@@ -21,7 +21,8 @@ export class IssueListComponent implements OnInit {
   }
 
   private getIssues() {
-    this.issues = this.issueService.getPendingIssues();
+    this.issueService.getPendingIssues()
+      .subscribe(res => this.issues = res.filter(issue => !issue.completed));
   }
 
   onCloseReport() {
@@ -31,8 +32,7 @@ export class IssueListComponent implements OnInit {
 
   onConfirm(confirmed: boolean) {
     if (confirmed && this.selectedIssue) {
-      this.issueService.completeIssue(this.
-        selectedIssue);
+      this.issueService.completeIssue(this.selectedIssue);
       this.getIssues();
     }
     this.selectedIssue = null;
